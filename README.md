@@ -1,4 +1,3 @@
-```markdown
 # 🍽️ Desafio de Engenharia de Dados – Rede de Restaurantes
 
 ## 📌 Objetivo
@@ -114,4 +113,3 @@ python coletor_respostas_api.py
 Este projeto é de uso educacional e pode ser adaptado livremente.
 
 Se quiser, posso gerar esse `README.md` como arquivo direto para download, ou personalizar para outro formato de documentação (ex: GitHub Wiki, MkDocs, etc.). Deseja isso?
-```
