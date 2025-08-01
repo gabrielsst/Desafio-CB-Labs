@@ -1,0 +1,63 @@
+import os
+import json
+import requests
+from datetime import date
+from pathlib import Path
+
+# -------------------------------
+# Parâmetros gerais
+# -------------------------------
+BASE_URL = "https://api.seudominio.com"  # 🔁 Substitua pela URL real da API
+STORE_ID = "R001"
+BUS_DT = date.today().isoformat()
+BASE_DIR = Path("data-lake/restaurant_chain/raw")  # Local de armazenamento
+
+# -------------------------------
+# Endpoints (todos são POST)
+# -------------------------------
+endpoints = {
+    "bi/getFiscalInvoice": "bi",
+    "res/getGuestChecks": "res",
+    "org/getChargeBack": "org",
+    "trans/getTransactions": "trans",
+    "inv/getCashManagementDetails": "inv"
+}
+
+# -------------------------------
+# Loop principal de chamadas
+# -------------------------------
+for endpoint_path, service_folder in endpoints.items():
+    full_url = f"{BASE_URL}/{endpoint_path}"
+    payload = {
+        "busDt": BUS_DT,
+        "storeId": STORE_ID
+    }
+
+    try:
+        response = requests.post(full_url, json=payload)
+        response.raise_for_status()
+        data = response.json()
+
+        # Define estrutura de partição
+        folder_path = (
+            BASE_DIR
+            / service_folder
+            / endpoint_path.split("/")[-1]
+            / f"year={date.today().year}"
+            / f"month={date.today().month:02}"
+            / f"day={date.today().day:02}"
+            / f"storeId={STORE_ID}"
+        )
+
+        # Cria diretórios
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+        # Salva JSON da resposta
+        file_path = folder_path / "response.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+        print(f"✅ Sucesso: {endpoint_path} → {file_path}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Erro ao acessar {endpoint_path}: {e}")
