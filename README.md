@@ -8,7 +8,7 @@ Este projeto tem como objetivo coletar, armazenar e estruturar dados proveniente
 
 ## 🚀 Funcionalidades
 
-- 📥 Coleta automática de dados de 5 endpoints via `POST`
+- 📥 Postagem automática de dados de 5 endpoints via `POST`
 - 🗂️ Armazenamento em estrutura de pastas particionada por:
   - **Data** (`year=YYYY/month=MM/day=DD`)
   - **Loja** (`storeId=XXX`)
